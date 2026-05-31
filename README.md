@@ -21,7 +21,7 @@ Para cumplir con los requisitos del proyecto, se aplicaron los siguientes pilare
 ## 3. Diagrama UML
 Aquí abajo está el diagrama de clases que armé para diseñar el sistema:
 
-![Diagrama de Clases UML](docs/uml.png)
+![Diagrama de Clases UML](docs/UML_5525799_AnaliaVera.svg)
 
 ## 4. Capturas de la Interfaz Gráfica (Swing)
 Así se ve la aplicación en ejecución:
@@ -60,7 +60,7 @@ Organicé el código en paquetes dentro de NetBeans para que sea fácil de mante
 *Nota: Al arrancar por primera vez, el programa va a crear solo una carpeta llamada `data/` en la raíz para guardar los archivos de persistencia.*
 
 ## Alumna
-* **Analia MVG**
+* **Analia Monserrat Vera Gonzalez**
 * GitHub: [@analiamvg](https://github.com/analiamvg)
-* Carrera: Ingeniería Electrónica / Mecatrónica
-* Materia: Programación Orientada a Objetos — 2026
+* Carrera: Ingeniería Electrónica
+* Materia: Programación Orientada a Objetos
