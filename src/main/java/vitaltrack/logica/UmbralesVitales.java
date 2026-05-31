@@ -37,11 +37,5 @@ public class UmbralesVitales {
     // Presión intracraneal (mmHg)
     public static final double PIC_NORMAL = 15.0;
     public static final double PIC_ALTA = 20.0;
-    public static final double PIC_CRITICA = 25.0;
- 
-    @Override
-    protected void finalize() throws Throwable {
-        System.out.println("Destructor: liberando UmbralesVitales");
-        super.finalize();
-    }    
+    public static final double PIC_CRITICA = 25.0; 
 }

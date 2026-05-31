@@ -222,9 +222,4 @@ public class PanelHistorial extends JPanel {
             return "— Sin datos";
         }
     }
-    @Override
-    protected void finalize() throws Throwable {
-        System.out.println("Destructor: liberando PanelDashboard");
-        super.finalize();
-    }
 }

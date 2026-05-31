@@ -142,11 +142,4 @@ public class HistorialClinico implements Serializable{
              + " | Alertas: " + alertas.size()
              + " | Pendientes: " + getAlertasPendientes().size();
     }
- 
-    @Override
-    protected void finalize() throws Throwable {
-        System.out.println("Destructor: liberando HistorialClinico -> " + idHistorial);
-        super.finalize();
-    }
-
 }

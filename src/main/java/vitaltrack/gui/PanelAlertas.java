@@ -235,9 +235,4 @@ public class PanelAlertas extends JPanel {
         Paciente p = pacientesVisibles.get(fila);
         ventana.mostrarHistorialPaciente(p.getId());
     }
-    @Override
-    protected void finalize() throws Throwable {
-        System.out.println("Destructor: liberando PanelDashboard");
-        super.finalize();
-    }
 }

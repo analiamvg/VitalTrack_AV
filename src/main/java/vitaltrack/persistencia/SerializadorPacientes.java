@@ -73,10 +73,4 @@ public class SerializadorPacientes {
             return new ArrayList<>();
         }
     }
- 
-    @Override
-    protected void finalize() throws Throwable {
-        System.out.println("Destructor: liberando SerializadorPacientes");
-        super.finalize();
-    }
 }

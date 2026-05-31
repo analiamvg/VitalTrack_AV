@@ -97,10 +97,4 @@ public class AnalizadorTendencias {
             default:     return 0.0;
         }
     }
-    
-    @Override
-    protected void finalize() throws Throwable {
-        System.out.println("Destructor: liberando AnalizadorTendencias");
-        super.finalize();
-    }
 }

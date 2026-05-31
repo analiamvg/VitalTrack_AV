@@ -169,10 +169,4 @@ public class MonitorAvanzado extends MonitorSignosVitales{
              + " | PA: " + (medirPresionArterial ? "Sí" : "No")
              + " | Temp: " + (medirTemperatura ? "Sí" : "No");
     }
-    
-    @Override
-    protected void finalize() throws Throwable {
-        System.out.println("Destructor: liberando MonitorAvanzado -> " + getIdMonitor());
-        super.finalize();
-    }
 }

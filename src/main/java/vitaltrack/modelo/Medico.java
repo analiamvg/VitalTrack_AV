@@ -78,11 +78,5 @@ public class Medico extends Persona{
              + " | Especialidad: " + especialidad
              + " | Pacientes: " + pacientesACargo.size();
     }
- 
-    @Override
-    protected void finalize() throws Throwable {
-        System.out.println("Destructor: liberando Medico -> " + getNombreCompleto());
-        super.finalize();
-    }
 }
 

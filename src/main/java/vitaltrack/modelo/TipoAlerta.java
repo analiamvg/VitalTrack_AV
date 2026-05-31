@@ -26,8 +26,4 @@ public class TipoAlerta {
     public static final String INSUF_RESPIRATORIA = "Posible insuficiencia respiratoria";
     public static final String SHOCK_HIPOVOLEMICO = "Posible shock hipovolémico";
     
-    @Override
-    protected void finalize() throws Throwable {
-        super.finalize();
-    }
 }

@@ -43,3 +43,10 @@
 30/05/2026 23:35:55 | [MODERADA] | Taquicardia | Paciente: PAC-0018 | Monitor: MON-0001 | FC = 118 bpm — taquicardia moderada | Atendida: No
 30/05/2026 23:35:55 | [MODERADA] | Fiebre | Paciente: PAC-0013 | Monitor: MON-0002 | Temp = 38,7°C | Atendida: No
 30/05/2026 23:35:55 | [MODERADA] | Hipoxia leve | Paciente: PAC-0023 | Monitor: MON-0003 | SpO2 = 90,6% | Atendida: No
+31/05/2026 00:55:26 | [CRITICA] | Hipoxia severa | Paciente: PAC-0007 | Monitor: MON-0001 | SpO2 = 88,1% — hipoxia severa | Atendida: No
+31/05/2026 00:55:26 | [CRITICA] | Taquipnea | Paciente: PAC-0008 | Monitor: MON-0002 | FR = 30 rpm | Atendida: No
+31/05/2026 00:55:26 | [MODERADA] | Hipoxia leve | Paciente: PAC-0009 | Monitor: MON-0003 | SpO2 = 93,0% | Atendida: No
+31/05/2026 00:56:20 | [MODERADA] | Apnea | Paciente: PAC-0008 | Monitor: MON-0002 | FR = 24 rpm | Atendida: No
+31/05/2026 00:56:20 | [MODERADA] | Hipoxia leve | Paciente: PAC-0009 | Monitor: MON-0003 | SpO2 = 93,9% | Atendida: No
+31/05/2026 00:56:35 | [MODERADA] | Hipoxia leve | Paciente: PAC-0008 | Monitor: MON-0002 | SpO2 = 94,5% | Atendida: No
+31/05/2026 00:56:35 | [MODERADA] | Hipoxia leve | Paciente: PAC-0004 | Monitor: MON-0003 | SpO2 = 93,8% | Atendida: No

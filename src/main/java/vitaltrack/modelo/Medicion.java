@@ -117,10 +117,4 @@ public class Medicion implements Serializable{
              + " FR:" + frecuenciaRespiratoria + "rpm"
              + " PA:" + getPresionArterial();
     }
- 
-    @Override
-    protected void finalize() throws Throwable {
-        System.out.println("Destructor: liberando Medicion -> " + idMedicion);
-        super.finalize();
-    }
 }

@@ -16,10 +16,4 @@ public class GeneradorId {
     public static void reiniciar() {
         contador.set(1);
     }
-    
-    @Override
-    protected void finalize() throws Throwable {
-        System.out.println("Destructor: liberando GeneradorId");
-        super.finalize();
-    }
 }

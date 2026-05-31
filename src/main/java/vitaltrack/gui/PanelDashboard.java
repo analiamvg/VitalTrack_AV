@@ -289,10 +289,4 @@ public class PanelDashboard extends JPanel {
         }
         return sistema.getPacientes().get(fila).getId();
     }
-    
-    @Override
-    protected void finalize() throws Throwable {
-        System.out.println("Destructor: liberando PanelDashboard");
-        super.finalize();
-    }
 }

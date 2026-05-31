@@ -73,10 +73,4 @@ public class Paciente extends Persona{
              + " | Grupo: " + grupoSanguineo
              + " | Diagnóstico: " + diagnostico;
     }
- 
-    @Override
-    protected void finalize() throws Throwable {
-        System.out.println("Destructor: liberando Paciente -> " + getNombreCompleto());
-        super.finalize();
-    }
 }

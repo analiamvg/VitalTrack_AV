@@ -139,10 +139,4 @@ public class AlertaClinica implements Serializable{
              + " (" + timestamp.format(FMT) + ")"
              + (atendida ? " ✓" : "");
     }
- 
-    @Override
-    protected void finalize() throws Throwable {
-        System.out.println("Destructor: liberando AlertaClinica -> " + idAlerta);
-        super.finalize();
-    }
 }

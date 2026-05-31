@@ -83,10 +83,4 @@ public abstract class Persona implements Serializable{
              + " | Edad: " + getEdad() + " años"
              + " | ID: " + id;
     }
- 
-    @Override
-    protected void finalize() throws Throwable {
-        System.out.println("Destructor: liberando Persona -> " + getNombreCompleto());
-        super.finalize();
-    }
 }

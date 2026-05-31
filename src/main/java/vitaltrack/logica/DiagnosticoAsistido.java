@@ -73,10 +73,4 @@ public class DiagnosticoAsistido {
         if (temp <  UmbralesVitales.TEMP_MIN) return "Hipotermia leve";
         return "Normal";
     }
- 
-    @Override
-    protected void finalize() throws Throwable {
-        System.out.println("Destructor: liberando DiagnosticoAsistido");
-        super.finalize();
-    }
 }

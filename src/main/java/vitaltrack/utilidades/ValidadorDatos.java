@@ -54,10 +54,4 @@ public class ValidadorDatos {
     public static String mensajeSiVacio(String texto, String nombreCampo) {
         return noEsVacio(texto) ? "" : nombreCampo + " no puede estar vacío.";
     }
-    
-    @Override
-    protected void finalize() throws Throwable {
-        System.out.println("Destructor: liberando ValidadorDatos");
-        super.finalize();
-    }
 }

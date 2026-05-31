@@ -223,10 +223,4 @@ public class PanelPaciente extends JPanel {
             ventana.setEstado("Paciente eliminado: " + p.getNombreCompleto());
         }
     }
-    
-    @Override
-    protected void finalize() throws Throwable {
-        System.out.println("Destructor: liberando PanelDashboard");
-        super.finalize();
-    }
 }

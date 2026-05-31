@@ -64,10 +64,4 @@ public class GestorArchivos {
     public static boolean existe(String rutaArchivo) {
         return new File(rutaArchivo).exists();
     }
- 
-    @Override
-    protected void finalize() throws Throwable {
-        System.out.println("Destructor: liberando GestorArchivos");
-        super.finalize();
-    }
 }

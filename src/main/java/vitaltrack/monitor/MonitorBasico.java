@@ -111,10 +111,4 @@ public class MonitorBasico extends MonitorSignosVitales{
         return super.toString()
              + " | Intervalo: " + intervaloMedicionSeg + "s";
     }
- 
-    @Override
-    protected void finalize() throws Throwable {
-        System.out.println("Destructor: liberando MonitorBasico -> " + getIdMonitor());
-        super.finalize();
-    }
 }

@@ -116,10 +116,4 @@ public class MonitorUCI extends MonitorAvanzado{
              + " | EEG: " + (medirEEG ? estadoEEG : "No")
              + " | PIC: " + String.format("%.1f", presionIntracraneal) + " mmHg";
     }
-    
-    @Override
-    protected void finalize() throws Throwable {
-        System.out.println("Destructor: liberando MonitorUCI -> " + getIdMonitor());
-        super.finalize();
-    }
 }

@@ -318,10 +318,4 @@ public class SimuladorMedicion extends JPanel {
         try { return Double.parseDouble(texto.trim()); } 
         catch (Exception e) { return 0.0; }
     }
-    
-    @Override
-    protected void finalize() throws Throwable {
-        System.out.println("Destructor: liberando PanelDashboard");
-        super.finalize();
-    }
 }

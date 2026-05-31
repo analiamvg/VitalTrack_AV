@@ -41,10 +41,4 @@ public class FormateadorFecha {
             return null;
         }
     }
-    
-    @Override
-    protected void finalize() throws Throwable {
-        System.out.println("Destructor: liberando FormateadorFecha");
-        super.finalize();
-    }
 }

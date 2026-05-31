@@ -34,11 +34,7 @@ public class LogAlertas {
         return GestorArchivos.leerLineas(rutaLog);
     }
  
-    public String getRutaLog() { return rutaLog; }
- 
-    @Override
-    protected void finalize() throws Throwable {
-        System.out.println("Destructor: liberando LogAlertas");
-        super.finalize();
+    public String getRutaLog() { 
+        return rutaLog; 
     }
 }

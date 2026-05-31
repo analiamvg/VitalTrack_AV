@@ -184,10 +184,4 @@ public class SistemaGestion {
              + " | Médicos: " + medicos.size()
              + " | Monitores: " + monitores.size();
     }
-    
-    @Override
-    protected void finalize() throws Throwable {
-        System.out.println("Destructor: liberando SistemaGestion");
-        super.finalize();
-    }
 }

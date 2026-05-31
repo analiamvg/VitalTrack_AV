@@ -162,9 +162,4 @@ public class DialogoRegistro extends JDialog {
             lblError.setText("Error al procesar la fecha del paciente.");
         }
     }
-    @Override
-    protected void finalize() throws Throwable {
-        System.out.println("Destructor: liberando PanelDashboard");
-        super.finalize();
-    }
 }

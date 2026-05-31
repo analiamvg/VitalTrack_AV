@@ -104,10 +104,4 @@ public abstract class MonitorSignosVitales implements Alertable, Serializable{
              + " | Criticidad: " + nivelCriticidad
              + " | Paciente: " + (idPacienteAsignado != null ? idPacienteAsignado : "Sin asignar");
     }
- 
-    @Override
-    protected void finalize() throws Throwable {
-        System.out.println("Destructor: liberando MonitorSignosVitales -> " + idMonitor);
-        super.finalize();
-    }
 }
