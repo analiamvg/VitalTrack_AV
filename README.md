@@ -21,7 +21,7 @@ Para cumplir con los requisitos del proyecto, se aplicaron los siguientes pilare
 ## 3. Diagrama UML
 Aquí abajo está el diagrama de clases que armé para diseñar el sistema:
 
-![Diagrama de Clases UML](docs/UML_5525799_AnaliaVera.svg)
+![Diagrama de Clases UML](UML_5525799_AnaliaVera.svg)
 
 ## 4. Capturas de la Interfaz Gráfica (Swing)
 Así se ve la aplicación en ejecución:
