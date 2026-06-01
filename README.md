@@ -27,11 +27,11 @@ Aquí abajo está el diagrama de clases que armé para diseñar el sistema:
 Así se ve la aplicación en ejecución:
 
 * **Pantalla Principal (Dashboard):**
-* <img width="959" height="539" alt="GUI_ResumenGeneral" src="https://github.com/user-attachments/assets/d015bc4f-3a08-4a83-bb83-e09c35dfd6a6" />
+ <img width="959" height="539" alt="GUI_ResumenGeneral" src="https://github.com/user-attachments/assets/d015bc4f-3a08-4a83-bb83-e09c35dfd6a6" />
 
 * **Registro de Pacientes:**
-* <img width="959" height="539" alt="GUI_NuevoPaciente" src="https://github.com/user-attachments/assets/22eaa629-1e7b-4af4-b616-a33c0f2089a6" />
-* <img width="959" height="539" alt="GUI_Pacientes" src="https://github.com/user-attachments/assets/e582ed0c-bd49-4056-bcb8-a3264ef37029" />
+ <img width="959" height="539" alt="GUI_NuevoPaciente" src="https://github.com/user-attachments/assets/22eaa629-1e7b-4af4-b616-a33c0f2089a6" />
+ <img width="959" height="539" alt="GUI_Pacientes" src="https://github.com/user-attachments/assets/e582ed0c-bd49-4056-bcb8-a3264ef37029" />
 
 * **Simulador de Signos Vitales y Alertas:**
 
@@ -43,16 +43,16 @@ Así se ve la aplicación en ejecución:
 Organicé el código en paquetes dentro de NetBeans para que sea fácil de mantener:
 * `vitaltrack.modelo`: Clases de los objetos del sistema (`Persona`, `Paciente`, `Medico`, `Medicion`, etc.).
 * `vitaltrack.monitor`: La interfaz de alertas y los distintos tipos de monitores médicos.
-* `vitaltrack.logica`: Las reglas del negocio (los umbrales de salud, detección de enfermedades y el sistema principal).
+* `vitaltrack.logica`: Las reglas, los umbrales de salud, detección de enfermedades y el sistema principal.
 * `vitaltrack.persistencia`: Clases para guardar y leer los datos en archivos.
 * `vitaltrack.gui`: Todas las pantallas y paneles hechos con Swing.
-* `vitaltrack.utilidades`: Helpers para formatear fechas, validar datos y generar IDs.
-* `App.java`: Es el archivo principal (Main) que arranca todo el programa.
+* `vitaltrack.utilidades`: Libreria para formatear fechas, validar datos y generar IDs.
+* `VitalTrack.java`: Es el archivo principal (Main) que arranca todo el programa.
 
 ## 6. Tecnologías utilizadas
 * **Java 17:** Lenguaje base del proyecto.
 * **Swing:** Para el diseño de las ventanas y los botones.
-* **Archivos (.dat y .txt):** Usé serialización de objetos para guardar los datos de pacientes/médicos sin perderlos al cerrar el programa, y archivos de texto para el historial de alertas (log).
+* **Archivos (.dat):** Con serialización de objetos para guardar los datos de pacientes/médicos sin perderlos al cerrar el programa, y archivos de texto para el historial de alertas (log).
 * **NetBeans y Maven:** IDE y gestor del proyecto.
 * **GitHub:** Para el control de versiones.
 
@@ -66,7 +66,7 @@ Organicé el código en paquetes dentro de NetBeans para que sea fácil de mante
 4.  Hacer clic derecho sobre el proyecto y elegir **Clean and Build** para compilar todo.
 5.  Buscar el archivo `App.java`, hacer clic derecho y darle a **Run File** (o presionar `Shift + F6`).
 
-*Nota: Al arrancar por primera vez, el programa va a crear solo una carpeta llamada `data/` en la raíz para guardar los archivos de persistencia.*
+Nota: Al arrancar por primera vez, el programa va a crear solo una carpeta llamada `data/` en la raíz para guardar los archivos de persistencia.
 
 ## Alumna
 * **Analia Monserrat Vera Gonzalez**
