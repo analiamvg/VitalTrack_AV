@@ -26,7 +26,8 @@ Aquí abajo está el diagrama de clases que armé para diseñar el sistema:
 ## 4. Capturas de la Interfaz Gráfica (Swing)
 Así se ve la aplicación en ejecución:
 
-* **Pantalla Principal (Dashboard):** *(Colocar captura en docs/screenshots/dashboard.png)*
+* **Pantalla Principal (Dashboard):<img width="959" height="539" alt="GUI_ResumenGeneral" src="https://github.com/user-attachments/assets/d015bc4f-3a08-4a83-bb83-e09c35dfd6a6" />
+
 * **Registro de Pacientes y Médicos:** *(Colocar captura en docs/screenshots/pacientes.png)*
 * **Simulador de Signos Vitales y Alertas:** *(Colocar captura en docs/screenshots/simulador.png)*
 
