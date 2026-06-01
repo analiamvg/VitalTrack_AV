@@ -26,10 +26,18 @@ Aquí abajo está el diagrama de clases que armé para diseñar el sistema:
 ## 4. Capturas de la Interfaz Gráfica (Swing)
 Así se ve la aplicación en ejecución:
 
-* **Pantalla Principal (Dashboard):<img width="959" height="539" alt="GUI_ResumenGeneral" src="https://github.com/user-attachments/assets/d015bc4f-3a08-4a83-bb83-e09c35dfd6a6" />
+* **Pantalla Principal (Dashboard):**
+* <img width="959" height="539" alt="GUI_ResumenGeneral" src="https://github.com/user-attachments/assets/d015bc4f-3a08-4a83-bb83-e09c35dfd6a6" />
 
-* **Registro de Pacientes y Médicos:** *(Colocar captura en docs/screenshots/pacientes.png)*
-* **Simulador de Signos Vitales y Alertas:** *(Colocar captura en docs/screenshots/simulador.png)*
+* **Registro de Pacientes:**
+* <img width="959" height="539" alt="GUI_NuevoPaciente" src="https://github.com/user-attachments/assets/22eaa629-1e7b-4af4-b616-a33c0f2089a6" />
+* <img width="959" height="539" alt="GUI_Pacientes" src="https://github.com/user-attachments/assets/e582ed0c-bd49-4056-bcb8-a3264ef37029" />
+
+* **Simulador de Signos Vitales y Alertas:**
+
+<img width="959" height="539" alt="GUI_Alertas" src="https://github.com/user-attachments/assets/d306cf0a-3151-4138-bcb4-90da83c0093f" />
+<img width="959" height="539" alt="GUI_Monitores" src="https://github.com/user-attachments/assets/6b905ea3-ffe0-42de-841e-63212119d45f" />
+
 
 ## 5. Estructura del Código fuente
 Organicé el código en paquetes dentro de NetBeans para que sea fácil de mantener:
