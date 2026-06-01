@@ -1,5 +1,5 @@
 # VitalTrack — Sistema de Gestión de Pacientes con Monitoreo de Signos Vitales
-**Proyecto Final — Programación Orientada a Objetos (2026)**
+Proyecto Final — Programación Orientada a Objetos (2026)
 *Facultad de Ingeniería — UNA*
 
 ## 1. Descripción del problema
