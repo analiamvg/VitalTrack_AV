@@ -50,3 +50,8 @@
 31/05/2026 00:56:20 | [MODERADA] | Hipoxia leve | Paciente: PAC-0009 | Monitor: MON-0003 | SpO2 = 93,9% | Atendida: No
 31/05/2026 00:56:35 | [MODERADA] | Hipoxia leve | Paciente: PAC-0008 | Monitor: MON-0002 | SpO2 = 94,5% | Atendida: No
 31/05/2026 00:56:35 | [MODERADA] | Hipoxia leve | Paciente: PAC-0004 | Monitor: MON-0003 | SpO2 = 93,8% | Atendida: No
+01/06/2026 18:02:37 | [LEVE] | Bradicardia | Paciente: PAC-0007 | Monitor: MON-0001 | FC = 59 bpm — bradicardia leve | Atendida: No
+01/06/2026 18:02:37 | [MODERADA] | Apnea | Paciente: PAC-0004 | Monitor: MON-0002 | FR = 24 rpm | Atendida: No
+01/06/2026 18:02:37 | [CRITICA] | Taquipnea | Paciente: PAC-0006 | Monitor: MON-0003 | FR = 31 rpm | Atendida: No
+01/06/2026 18:09:58 | [MODERADA] | Hipoxia leve | Paciente: PAC-0020 | Monitor: MON-0002 | SpO2 = 91,7% | Atendida: No
+01/06/2026 18:09:58 | [MODERADA] | Hipoxia leve | Paciente: PAC-0021 | Monitor: MON-0003 | SpO2 = 94,3% | Atendida: No

@@ -1,185 +1,236 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
+ */
 package vitaltrack.gui;
 
-import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.List;
-import vitaltrack.logica.SistemaGestion;
-import vitaltrack.modelo.AlertaClinica;
-import vitaltrack.modelo.Paciente;
-import vitaltrack.utilidades.FormateadorFecha;
-
-public class PanelAlertas extends JPanel {
-
-    private SistemaGestion sistema;
-    private VentanaPrincipal ventana;
-
-    private DefaultTableModel modeloTabla;
-    private JTable tabla;
-    private JComboBox<String> cmbFiltro;
-    private JLabel lblResumen;
-
-    private java.util.List<AlertaClinica> alertasVisibles = new java.util.ArrayList<>();
-    private java.util.List<Paciente> pacientesVisibles = new java.util.ArrayList<>();
-
-    public PanelAlertas(SistemaGestion sistema, VentanaPrincipal ventana) {
+/**
+ *
+ * @author Master
+ */
+public class PanelAlertas extends javax.swing.JPanel {
+    private vitaltrack.logica.SistemaGestion sistema;
+    private VentanaPrincipal ventanaPrincipal;
+    private javax.swing.table.DefaultTableModel modeloTabla;
+    
+    private java.util.List<vitaltrack.modelo.AlertaClinica> alertasVisibles = new java.util.ArrayList<>();
+    private java.util.List<vitaltrack.modelo.Paciente> pacientesVisibles = new java.util.ArrayList<>();
+    
+    public PanelAlertas(vitaltrack.logica.SistemaGestion sistema, VentanaPrincipal ventanaPrincipal) {
+        initComponents();
         this.sistema = sistema;
-        this.ventana = ventana;
+        this.ventanaPrincipal = ventanaPrincipal;
+        this.modeloTabla = (javax.swing.table.DefaultTableModel) tabla.getModel(); // Conecta el modelo del diseño
+        //this.setLocationRelativeTo(ventanaPrincipal); // Centra la ventana
         
-        setLayout(new BorderLayout(5, 5));
-        setBackground(VentanaPrincipal.COLOR_FONDO);
-        
-        construirUI();
+        // Cargar los datos por primera vez
         cargarDatos("Todas");
     }
-
-    private void construirUI() {
-        JPanel panelNorte = new JPanel(new BorderLayout());
-        panelNorte.setBackground(VentanaPrincipal.COLOR_FONDO);
-
-        //Textos del titulo
-        JPanel panelTextos = new JPanel(new GridLayout(2, 1));
-        panelTextos.setBackground(VentanaPrincipal.COLOR_FONDO);
-        
-        JLabel titulo = new JLabel("Panel de Alertas");
-        titulo.setFont(new Font("Arial", Font.BOLD, 18));
-        
-        lblResumen = new JLabel("Cargando...");
-        
-        panelTextos.add(titulo);
-        panelTextos.add(lblResumen);
-
-        //Filtros
-        JPanel filtroPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        filtroPanel.setBackground(VentanaPrincipal.COLOR_FONDO);
-
-        JLabel lblFiltro = new JLabel("Filtrar por nivel: ");
-        
-        String[] niveles = {"Todas", "CRITICA", "MODERADA", "LEVE"};
-        cmbFiltro = new JComboBox<>(niveles);
-        cmbFiltro.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                cargarDatos((String) cmbFiltro.getSelectedItem());
-            }
-        });
-
-        JButton btnRefresh = new JButton("Actualizar");
-        btnRefresh.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                cargarDatos((String) cmbFiltro.getSelectedItem());
-            }
-        });
-
-        filtroPanel.add(lblFiltro);
-        filtroPanel.add(cmbFiltro);
-        filtroPanel.add(btnRefresh);
-
-        panelNorte.add(panelTextos, BorderLayout.WEST);
-        panelNorte.add(filtroPanel, BorderLayout.EAST);
-        add(panelNorte, BorderLayout.NORTH);
-
-        //Tabla
-        String[] cols = {"Nivel", "Tipo de alerta", "Paciente", "Descripción", "Fecha y hora", "Atendida"};
-        
-        //Tabla estándar
-        modeloTabla = new DefaultTableModel(cols, 0) {
-            @Override 
-            public boolean isCellEditable(int r, int c) { 
-                return false; 
-            }
-        };
-        
-        tabla = new JTable(modeloTabla);
-        
-        JScrollPane scroll = new JScrollPane(tabla);
-        add(scroll, BorderLayout.CENTER);
-
-        //Acciones
-        JPanel barra = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        barra.setBackground(VentanaPrincipal.COLOR_PANEL);
-
-        JButton btnAtender = new JButton("Marcar como atendida");
-        btnAtender.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                marcarAtendida();
-            }
-        });
-
-        JButton btnAtenderTodas = new JButton("Atender todas las visibles");
-        btnAtenderTodas.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                marcarTodasAtendidas();
-            }
-        });
-
-        JButton btnVerPaciente = new JButton("Ver historial del paciente");
-        btnVerPaciente.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                verHistorialPaciente();
-            }
-        });
-
-        barra.add(btnAtender);
-        barra.add(btnAtenderTodas);
-        barra.add(btnVerPaciente);
-
-        JLabel hint = new JLabel(" Selecciona una fila para usar las acciones");
-        barra.add(hint);
-
-        add(barra, BorderLayout.SOUTH);
+    
+    /**
+     * Creates new form PanelAlertasN
+     */
+    public PanelAlertas() {
+        initComponents();
     }
 
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        jLabel1 = new javax.swing.JLabel();
+        lblResumen = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        cmbFiltro = new javax.swing.JComboBox<>();
+        btnRefresh = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tabla = new javax.swing.JTable();
+        jLabel3 = new javax.swing.JLabel();
+        btnAtender = new javax.swing.JButton();
+        btnAtenderTodas = new javax.swing.JButton();
+        btnVerPaciente = new javax.swing.JButton();
+
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        jLabel1.setText("Panel de Alertas");
+
+        lblResumen.setText("Estadisticas");
+
+        jLabel2.setText("Filtrar por nivel");
+
+        cmbFiltro.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Todas", "CRITICA", "MODERADA", "LEVE" }));
+        cmbFiltro.addActionListener(this::cmbFiltroActionPerformed);
+
+        btnRefresh.setText("Actualizar");
+        btnRefresh.addActionListener(this::btnRefreshActionPerformed);
+
+        tabla.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null}
+            },
+            new String [] {
+                "Nivel", "Tipo de alerta", "Paciente", "Desscripción", "Fecha y hora", "Atendida"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, true, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jScrollPane1.setViewportView(tabla);
+
+        jLabel3.setText("Selecciona una fila para usar las acciones:");
+
+        btnAtender.setText("Marcar como atendido");
+        btnAtender.addActionListener(this::btnAtenderActionPerformed);
+
+        btnAtenderTodas.setText("Atender las visibles");
+        btnAtenderTodas.addActionListener(this::btnAtenderTodasActionPerformed);
+
+        btnVerPaciente.setText("Ver historial del paciente");
+        btnVerPaciente.addActionListener(this::btnVerPacienteActionPerformed);
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+        this.setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(175, 175, 175)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel2)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel1)
+                                .addGap(144, 144, 144)
+                                .addComponent(cmbFiltro, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(32, 32, 32))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(101, 101, 101)
+                        .addComponent(lblResumen)
+                        .addGap(168, 168, 168)
+                        .addComponent(btnRefresh)
+                        .addContainerGap())))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(19, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 593, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel3)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(btnAtender)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnAtenderTodas)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnVerPaciente)))
+                .addGap(16, 16, 16))
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(cmbFiltro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel1))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnRefresh)
+                    .addComponent(lblResumen))
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 231, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jLabel3)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnAtender)
+                    .addComponent(btnAtenderTodas)
+                    .addComponent(btnVerPaciente))
+                .addContainerGap(10, Short.MAX_VALUE))
+        );
+    }// </editor-fold>//GEN-END:initComponents
+
+    private void cmbFiltroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbFiltroActionPerformed
+        // TODO add your handling code here:
+        cargarDatos((String) cmbFiltro.getSelectedItem());
+    }//GEN-LAST:event_cmbFiltroActionPerformed
+
+    private void btnRefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRefreshActionPerformed
+        // TODO add your handling code here:
+        cargarDatos((String) cmbFiltro.getSelectedItem());
+    }//GEN-LAST:event_btnRefreshActionPerformed
+
+    private void btnAtenderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAtenderActionPerformed
+        // TODO add your handling code here:
+        marcarAtendida();
+    }//GEN-LAST:event_btnAtenderActionPerformed
+
+    private void btnAtenderTodasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAtenderTodasActionPerformed
+        // TODO add your handling code here:
+        marcarTodasAtendidas();
+    }//GEN-LAST:event_btnAtenderTodasActionPerformed
+
+    private void btnVerPacienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVerPacienteActionPerformed
+        // TODO add your handling code here:
+        verHistorialPaciente();
+    }//GEN-LAST:event_btnVerPacienteActionPerformed
+
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnAtender;
+    private javax.swing.JButton btnAtenderTodas;
+    private javax.swing.JButton btnRefresh;
+    private javax.swing.JButton btnVerPaciente;
+    private javax.swing.JComboBox<String> cmbFiltro;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel lblResumen;
+    private javax.swing.JTable tabla;
+    // End of variables declaration//GEN-END:variables
     public void cargarDatos(String filtro) {
         modeloTabla.setRowCount(0);
         alertasVisibles.clear();
         pacientesVisibles.clear();
 
-        int totalCrit = 0;
-        int totalMod = 0;
-        int totalLeve = 0;
-        int totalPend = 0;
+        int totalCrit = 0; int totalMod = 0; int totalLeve = 0; int totalPend = 0;
 
-        //Recorrer las listas de pacientes
-        for (int i = 0; i < sistema.getPacientes().size(); i++) {
-            Paciente p = sistema.getPacientes().get(i);
+        if (sistema == null || sistema.getPacientes() == null) return;
+
+        for (vitaltrack.modelo.Paciente p : sistema.getPacientes()) {
+            if (p.getHistorial() == null || p.getHistorial().getAlertas() == null) continue;
             
-            for (int j = 0; j < p.getHistorial().getAlertas().size(); j++) {
-                AlertaClinica a = p.getHistorial().getAlertas().get(j);
-
-                //Contar totales según gravedad
-                if (a.getNivelTexto().equals("CRITICA")) {
-                    totalCrit++;
-                } else if (a.getNivelTexto().equals("MODERADA")) {
-                    totalMod++;
-                } else {
-                    totalLeve++;
-                }
+            for (vitaltrack.modelo.AlertaClinica a : p.getHistorial().getAlertas()) {
+                if ("CRITICA".equals(a.getNivelTexto())) totalCrit++;
+                else if ("MODERADA".equals(a.getNivelTexto())) totalMod++;
+                else totalLeve++;
                 
-                if (!a.isAtendida()) {
-                    totalPend++;
-                }
+                if (!a.isAtendida()) totalPend++;
 
-                //Evaluar si coincide
                 boolean mostrar = filtro.equals("Todas") || a.getNivelTexto().equals(filtro);
                 
                 if (mostrar) {
                     alertasVisibles.add(a);
                     pacientesVisibles.add(p);
 
-                    //Insertar fila en la tabla
                     Object[] fila = new Object[6];
                     fila[0] = a.getNivelTexto();
                     fila[1] = a.getTipoAlerta();
                     fila[2] = p.getNombreCompleto();
                     fila[3] = a.getDescripcion();
-                    fila[4] = FormateadorFecha.formatearFechaHora(a.getTimestamp());
+                    fila[4] = vitaltrack.utilidades.FormateadorFecha.formatearFechaHora(a.getTimestamp());
                     fila[5] = a.isAtendida() ? "Sí ✔" : "No";
                     
                     modeloTabla.addRow(fila);
@@ -187,7 +238,6 @@ public class PanelAlertas extends JPanel {
             }
         }
 
-        //Actualizar etiqueta del resumen de texto superior
         lblResumen.setText("Total: " + (totalCrit + totalMod + totalLeve)
                 + "   |   Críticas: " + totalCrit
                 + "   |   Moderadas: " + totalMod
@@ -198,41 +248,34 @@ public class PanelAlertas extends JPanel {
     private void marcarAtendida() {
         int fila = tabla.getSelectedRow();
         if (fila < 0) {
-            JOptionPane.showMessageDialog(this,
-                    "Seleccioná una alerta primero.", "Sin selección",
-                    JOptionPane.WARNING_MESSAGE);
+            javax.swing.JOptionPane.showMessageDialog(this, "Selecciona una alerta de la tabla primero.", "Sin selección", javax.swing.JOptionPane.WARNING_MESSAGE);
             return;
         }
-        
         alertasVisibles.get(fila).setAtendida(true);
         cargarDatos((String) cmbFiltro.getSelectedItem());
-        ventana.setEstado("Alerta marcada como atendida");
+        if (ventanaPrincipal != null) ventanaPrincipal.setEstado("Alerta atendida.");
     }
 
     private void marcarTodasAtendidas() {
-        int conf = JOptionPane.showConfirmDialog(this,
-                "¿Marcar todas las alertas visibles como atendidas?",
-                "Confirmar", JOptionPane.YES_NO_OPTION);
-                
-        if (conf == JOptionPane.YES_OPTION) {
-            for (int i = 0; i < alertasVisibles.size(); i++) {
-                alertasVisibles.get(i).setAtendida(true);
-            }
+        if (alertasVisibles.isEmpty()) return;
+        int conf = javax.swing.JOptionPane.showConfirmDialog(this, "¿Atender todas las alertas visibles actuales?", "Confirmar lote", javax.swing.JOptionPane.YES_NO_OPTION);
+        if (conf == javax.swing.JOptionPane.YES_OPTION) {
+            for (vitaltrack.modelo.AlertaClinica a : alertasVisibles) a.setAtendida(true);
             cargarDatos((String) cmbFiltro.getSelectedItem());
-            ventana.setEstado("Todas las alertas marcadas como atendidas");
+            if (ventanaPrincipal != null) ventanaPrincipal.setEstado("Alertas procesadas.");
         }
     }
 
     private void verHistorialPaciente() {
         int fila = tabla.getSelectedRow();
         if (fila < 0) {
-            JOptionPane.showMessageDialog(this,
-                    "Seleccioná una alerta primero.", "Sin selección",
-                    JOptionPane.WARNING_MESSAGE);
+            javax.swing.JOptionPane.showMessageDialog(this, "Selecciona una alerta de la tabla primero.", "Sin selección", javax.swing.JOptionPane.WARNING_MESSAGE);
             return;
         }
-        
-        Paciente p = pacientesVisibles.get(fila);
-        ventana.mostrarHistorialPaciente(p.getId());
+        vitaltrack.modelo.Paciente p = pacientesVisibles.get(fila);
+        if (ventanaPrincipal != null) {
+            ventanaPrincipal.mostrarHistorialPaciente(p.getId());
+            ventanaPrincipal.toFront();
+        }
     }
 }

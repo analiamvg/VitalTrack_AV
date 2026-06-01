@@ -1,168 +1,352 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
+ */
 package vitaltrack.gui;
 
-import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.util.List;
-import vitaltrack.logica.AnalizadorTendencias;
-import vitaltrack.logica.SistemaGestion;
-import vitaltrack.modelo.AlertaClinica;
-import vitaltrack.modelo.Medicion;
-import vitaltrack.modelo.Paciente;
-import vitaltrack.monitor.MonitorSignosVitales;
-
-public class PanelDashboard extends JPanel {
-
-    private SistemaGestion   sistema;
+/**
+ *
+ * @author Master
+ */
+public class PanelDashboard extends javax.swing.JPanel {
+    
+    private vitaltrack.logica.SistemaGestion sistema;
     private VentanaPrincipal ventana;
-
-    private JLabel lblCantPacientes;
-    private JLabel lblCantMonitores;
-    private JLabel lblCantAlertas;
-    private JLabel lblCantCriticos;
-
-    private DefaultTableModel modeloTablaPacientes;
-    private DefaultTableModel modeloTablaAlertas;
-
-    public PanelDashboard(SistemaGestion sistema, VentanaPrincipal ventana) {
-        this.sistema  = sistema;
-        this.ventana  = ventana;
+    private javax.swing.table.DefaultTableModel modeloTablaPacientes;
+    private javax.swing.table.DefaultTableModel modeloTablaAlertas;
+    
+    public PanelDashboard(vitaltrack.logica.SistemaGestion sistema, VentanaPrincipal ventana) {
+        initComponents();
+        this.sistema = sistema;
+        this.ventana = ventana;
         
-        setLayout(new BorderLayout(10, 10));
-        setBackground(VentanaPrincipal.COLOR_FONDO);
+        // Conectamos los modelos del diseño visual a nuestras variables lógicas
+        this.modeloTablaPacientes = (javax.swing.table.DefaultTableModel) tablaPacientes.getModel();
+        this.modeloTablaAlertas = (javax.swing.table.DefaultTableModel) tablaAlertas.getModel();
         
-        construirUI();
+        // Inicializamos los datos clínicos en pantalla
+        actualizar();
+        configurarEventosManuales();
     }
 
-    private void construirUI() {
-        //Encabezado
-        JPanel encabezado = new JPanel(new BorderLayout());
-        encabezado.setBackground(VentanaPrincipal.COLOR_FONDO);
-
-        JPanel panelTextos = new JPanel(new GridLayout(2, 1));
-        panelTextos.setBackground(VentanaPrincipal.COLOR_FONDO);
-        
-        JLabel titulo = new JLabel("Pagina Principal");
-        titulo.setFont(new Font("Arial", Font.BOLD, 22));
-        JLabel subtitulo = new JLabel("Resumen general del sistema en tiempo real");
-        
-        panelTextos.add(titulo);
-        panelTextos.add(subtitulo);
-
-        JButton btnRefresh = new JButton("Actualizar");
-        btnRefresh.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                actualizar();
-            }
-        });
-
-        encabezado.add(panelTextos, BorderLayout.WEST);
-        encabezado.add(btnRefresh, BorderLayout.EAST);
-        add(encabezado, BorderLayout.NORTH);
-
-        //Principal
-        JPanel centro = new JPanel(new BorderLayout(10, 10));
-        centro.setBackground(VentanaPrincipal.COLOR_FONDO);
-
-        JPanel filaTarjetas = new JPanel(new GridLayout(1, 4, 10, 10));
-        filaTarjetas.setBackground(VentanaPrincipal.COLOR_FONDO);
-
-        lblCantPacientes = new JLabel("0", SwingConstants.CENTER);
-        lblCantPacientes.setFont(new Font("Arial", Font.BOLD, 24));
-        JPanel tarjeta1 = new JPanel(new BorderLayout());
-        tarjeta1.add(new JLabel(" Pacientes", SwingConstants.CENTER), BorderLayout.NORTH);
-        tarjeta1.add(lblCantPacientes, BorderLayout.CENTER);
-
-        lblCantMonitores = new JLabel("0", SwingConstants.CENTER);
-        lblCantMonitores.setFont(new Font("Arial", Font.BOLD, 24));
-        JPanel tarjeta2 = new JPanel(new BorderLayout());
-        tarjeta2.add(new JLabel(" Monitores", SwingConstants.CENTER), BorderLayout.NORTH);
-        tarjeta2.add(lblCantMonitores, BorderLayout.CENTER);
-
-        lblCantAlertas = new JLabel("0", SwingConstants.CENTER);
-        lblCantAlertas.setFont(new Font("Arial", Font.BOLD, 24));
-        JPanel tarjeta3 = new JPanel(new BorderLayout());
-        tarjeta3.add(new JLabel(" Alertas pendientes", SwingConstants.CENTER), BorderLayout.NORTH);
-        tarjeta3.add(lblCantAlertas, BorderLayout.CENTER);
-
-        lblCantCriticos = new JLabel("0", SwingConstants.CENTER);
-        lblCantCriticos.setFont(new Font("Arial", Font.BOLD, 24));
-        lblCantCriticos.setForeground(Color.RED);
-        JPanel tarjeta4 = new JPanel(new BorderLayout());
-        tarjeta4.add(new JLabel(" Críticos", SwingConstants.CENTER), BorderLayout.NORTH);
-        tarjeta4.add(lblCantCriticos, BorderLayout.CENTER);
-
-        filaTarjetas.add(tarjeta1);
-        filaTarjetas.add(tarjeta2);
-        filaTarjetas.add(tarjeta3);
-        filaTarjetas.add(tarjeta4);
-        centro.add(filaTarjetas, BorderLayout.NORTH);
-
-        JPanel tablas = new JPanel(new GridLayout(1, 2, 10, 0));
-        tablas.setBackground(VentanaPrincipal.COLOR_FONDO);
-
-        //Tabla Pacientes
-        JPanel panelPacientes = new JPanel(new BorderLayout(5, 5));
-        panelPacientes.add(new JLabel("Pacientes registrados", SwingConstants.LEFT), BorderLayout.NORTH);
-        
-        String[] colsPacientes = {"Estado", "Nombre", "Historia", "Última medición", "Monitor"};
-        modeloTablaPacientes = new DefaultTableModel(colsPacientes, 0) {
-            @Override 
-            public boolean isCellEditable(int r, int c) { return false; }
-        };
-        final JTable tablaPacientes = new JTable(modeloTablaPacientes);
-        
-        //Doble clic
-        tablaPacientes.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                if (e.getClickCount() == 2) {
-                    int fila = tablaPacientes.getSelectedRow();
-                    if (fila >= 0) {
-                        String idPaciente = obtenerIdPacienteFila(fila);
-                        String nombre = sistema.getPacientes().get(fila).getNombreCompleto();
-                        String[] opciones = {"Ver historial", "Asignar diagnóstico", "Asignar monitor","Asignar médico", "Cancelar"};
-                        
-                        int opcion = JOptionPane.showOptionDialog(
-                            ventana, "¿Qué deseas hacer?", nombre,
-                            JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE,
-                            null, opciones, opciones[0]
-                        );
-                        
-                        if (opcion == 0) ventana.mostrarHistorialPaciente(idPaciente);
-                        if (opcion == 1) ventana.asignarDiagnostico(idPaciente);
-                        if (opcion == 2) ventana.asignarMonitor(idPaciente);
-                        if (opcion == 3) ventana.asignarMedico(idPaciente);
-                    }
-                }
-            }
-        });
-        panelPacientes.add(new JScrollPane(tablaPacientes), BorderLayout.CENTER);
-        panelPacientes.add(new JLabel("Doble clic para ver historial"), BorderLayout.SOUTH);
-        tablas.add(panelPacientes);
-
-        //Tabla Alertas
-        JPanel panelAlertas = new JPanel(new BorderLayout(5, 5));
-        panelAlertas.add(new JLabel("Alertas recientes", SwingConstants.LEFT), BorderLayout.NORTH);
-
-        String[] colsAlertas = {"Nivel", "Tipo", "Paciente", "Descripción"};
-        modeloTablaAlertas = new DefaultTableModel(colsAlertas, 0) {
-            @Override 
-            public boolean isCellEditable(int r, int c) { return false; }
-        };
-        JTable tablaAlertas = new JTable(modeloTablaAlertas);
-        panelAlertas.add(new JScrollPane(tablaAlertas), BorderLayout.CENTER);
-        panelAlertas.add(new JLabel("Mostrando las últimas 20 alertas"), BorderLayout.SOUTH);
-        tablas.add(panelAlertas);
-
-        centro.add(tablas, BorderLayout.CENTER);
-        add(centro, BorderLayout.CENTER);
+    /**
+     * Creates new form PanelDashboardN
+     */
+    public PanelDashboard() {
+        initComponents();
     }
+
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        jPanel1 = new javax.swing.JPanel();
+        jLabel3 = new javax.swing.JLabel();
+        lblCantPacientes = new javax.swing.JLabel();
+        jPanel2 = new javax.swing.JPanel();
+        jLabel4 = new javax.swing.JLabel();
+        lblCantMonitores = new javax.swing.JLabel();
+        jPanel3 = new javax.swing.JPanel();
+        jLabel5 = new javax.swing.JLabel();
+        lblCantAlertas = new javax.swing.JLabel();
+        jPanel4 = new javax.swing.JPanel();
+        jLabel6 = new javax.swing.JLabel();
+        lblCantCriticos = new javax.swing.JLabel();
+        jLabel9 = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tablaPacientes = new javax.swing.JTable();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        tablaAlertas = new javax.swing.JTable();
+        jLabel8 = new javax.swing.JLabel();
+        jLabel10 = new javax.swing.JLabel();
+
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        jLabel1.setText("Pagina Principal");
+
+        jLabel2.setText("Resumen general del sistema");
+
+        jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
+
+        jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel3.setText("Pacientes");
+
+        lblCantPacientes.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        lblCantPacientes.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblCantPacientes.setText("0");
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(20, 20, 20)
+                        .addComponent(jLabel3))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(39, 39, 39)
+                        .addComponent(lblCantPacientes)))
+                .addContainerGap(54, Short.MAX_VALUE))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel3)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblCantPacientes)
+                .addContainerGap())
+        );
+
+        jPanel2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
+
+        jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel4.setText("Monitores");
+
+        lblCantMonitores.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        lblCantMonitores.setText("0");
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(39, 39, 39)
+                .addComponent(lblCantMonitores)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addContainerGap(23, Short.MAX_VALUE)
+                .addComponent(jLabel4)
+                .addGap(56, 56, 56))
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel4)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblCantMonitores)
+                .addContainerGap())
+        );
+
+        jPanel3.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
+
+        jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel5.setText("Alertas pendientes");
+
+        lblCantAlertas.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        lblCantAlertas.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblCantAlertas.setText("0");
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel5)
+                .addGap(56, 56, 56))
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addGap(53, 53, 53)
+                .addComponent(lblCantAlertas)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap(14, Short.MAX_VALUE)
+                .addComponent(jLabel5)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(lblCantAlertas)
+                .addContainerGap())
+        );
+
+        jPanel4.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
+        jPanel4.setForeground(new java.awt.Color(255, 51, 0));
+
+        jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel6.setText("Criticos");
+
+        lblCantCriticos.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        lblCantCriticos.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblCantCriticos.setText("0");
+
+        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
+        jPanel4.setLayout(jPanel4Layout);
+        jPanel4Layout.setHorizontalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addGap(39, 39, 39)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel6)
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addGap(6, 6, 6)
+                        .addComponent(lblCantCriticos)))
+                .addContainerGap(43, Short.MAX_VALUE))
+        );
+        jPanel4Layout.setVerticalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addContainerGap(14, Short.MAX_VALUE)
+                .addComponent(jLabel6)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblCantCriticos)
+                .addGap(12, 12, 12))
+        );
+
+        jLabel9.setText("Alertas recientes");
+
+        jLabel7.setText("Pacientes registrados");
+
+        tablaPacientes.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
+            },
+            new String [] {
+                "Estado", "Nombre", "Historia", "Ultima medicion", "Monitor"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jScrollPane1.setViewportView(tablaPacientes);
+
+        tablaAlertas.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Nivel", "Tipo", "Paciente", "Descripcion"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jScrollPane2.setViewportView(tablaAlertas);
+
+        jLabel8.setText("Hacer doble clic para ver historial");
+
+        jLabel10.setText("Mostrando las ultimas 20 alertas");
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+        this.setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 784, Short.MAX_VALUE)
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createSequentialGroup()
+                    .addContainerGap()
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createSequentialGroup()
+                            .addGap(12, 12, 12)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(layout.createSequentialGroup()
+                                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGap(27, 27, 27)
+                                    .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGap(26, 26, 26)
+                                    .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGap(46, 46, 46)
+                                    .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(layout.createSequentialGroup()
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 367, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(jLabel7)
+                                        .addComponent(jLabel8))
+                                    .addGap(18, 18, 18)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(jLabel10)
+                                        .addComponent(jLabel9)
+                                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 350, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                        .addComponent(jLabel1)
+                        .addComponent(jLabel2))
+                    .addContainerGap(31, Short.MAX_VALUE)))
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 467, Short.MAX_VALUE)
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createSequentialGroup()
+                    .addGap(9, 9, 9)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(layout.createSequentialGroup()
+                            .addComponent(jLabel1)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(jLabel2)
+                            .addGap(26, 26, 26)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createSequentialGroup()
+                            .addGap(12, 12, 12)
+                            .addComponent(jLabel7))
+                        .addGroup(layout.createSequentialGroup()
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(jLabel9)))
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 217, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 217, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel8)
+                        .addComponent(jLabel10))
+                    .addContainerGap(30, Short.MAX_VALUE)))
+        );
+    }// </editor-fold>//GEN-END:initComponents
+
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JLabel lblCantAlertas;
+    private javax.swing.JLabel lblCantCriticos;
+    private javax.swing.JLabel lblCantMonitores;
+    private javax.swing.JLabel lblCantPacientes;
+    private javax.swing.JTable tablaAlertas;
+    private javax.swing.JTable tablaPacientes;
+    // End of variables declaration//GEN-END:variables
 
     public void actualizar() {
         actualizarTarjetas();
@@ -178,11 +362,11 @@ public class PanelDashboard extends JPanel {
         int totalCriticos   = 0;
         
         for (int i = 0; i < sistema.getPacientes().size(); i++) {
-            Paciente p = sistema.getPacientes().get(i);
+            vitaltrack.modelo.Paciente p = sistema.getPacientes().get(i);
             totalPendientes += p.getHistorial().getAlertasPendientes().size();
             
             for (int j = 0; j < p.getHistorial().getAlertasPendientes().size(); j++) {
-                AlertaClinica a = p.getHistorial().getAlertasPendientes().get(j);
+                vitaltrack.modelo.AlertaClinica a = p.getHistorial().getAlertasPendientes().get(j);
                 if (a.esCritica()) { 
                     totalCriticos++; 
                     break; 
@@ -197,12 +381,12 @@ public class PanelDashboard extends JPanel {
         modeloTablaPacientes.setRowCount(0);
         
         for (int i = 0; i < sistema.getPacientes().size(); i++) {
-            Paciente p = sistema.getPacientes().get(i);
+            vitaltrack.modelo.Paciente p = sistema.getPacientes().get(i);
             
-            List<AlertaClinica> pendientes = p.getHistorial().getAlertasPendientes();
+            java.util.List<vitaltrack.modelo.AlertaClinica> pendientes = p.getHistorial().getAlertasPendientes();
             String estado = "NORMAL";
             for (int j = 0; j < pendientes.size(); j++) {
-                AlertaClinica a = pendientes.get(j);
+                vitaltrack.modelo.AlertaClinica a = pendientes.get(j);
                 if (a.esCritica()) { 
                     estado = "CRÍTICO"; 
                     break; 
@@ -213,7 +397,7 @@ public class PanelDashboard extends JPanel {
             }
 
             //Datos de medición
-            Medicion ultima = p.getHistorial().getUltimaMedicion();
+            vitaltrack.modelo.Medicion ultima = p.getHistorial().getUltimaMedicion();
             String ultimaMed = "Sin mediciones";
             if (ultima != null) {
                 ultimaMed = "FC:" + String.format("%.0f", ultima.getFrecuenciaCardiaca())
@@ -223,7 +407,7 @@ public class PanelDashboard extends JPanel {
             //Localizar el monitor asignado
             String idMonitor = "Sin monitor";
             for (int k = 0; k < sistema.getMonitores().size(); k++) {
-                MonitorSignosVitales m = sistema.getMonitores().get(k);
+                vitaltrack.monitor.MonitorSignosVitales m = sistema.getMonitores().get(k);
                 if (p.getId().equals(m.getIdPacienteAsignado())) {
                     idMonitor = m.getTipoMonitor().replace("Monitor ", "");
                     break;
@@ -242,51 +426,74 @@ public class PanelDashboard extends JPanel {
     }
 
     private void actualizarTablaAlertas() {
-    modeloTablaAlertas.setRowCount(0);
-    
-    //Listas las alertas 
-    java.util.ArrayList<AlertaClinica> listaTemporalAlertas = new java.util.ArrayList<>();
-    java.util.ArrayList<String> listaTemporalNombres = new java.util.ArrayList<>();
-    
-    //Recorremos todos los pacientes
-    for (int i = 0; i < sistema.getPacientes().size(); i++) {
-        Paciente p = sistema.getPacientes().get(i);
+        modeloTablaAlertas.setRowCount(0);
         
-        if (p.getHistorial() != null && p.getHistorial().getAlertasPendientes() != null) {
-            for (int j = 0; j < p.getHistorial().getAlertasPendientes().size(); j++) {
-                AlertaClinica a = p.getHistorial().getAlertasPendientes().get(j);
-                
-                listaTemporalAlertas.add(a);
-                listaTemporalNombres.add(p.getNombreCompleto());
+        java.util.ArrayList<vitaltrack.modelo.AlertaClinica> listaTemporalAlertas = new java.util.ArrayList<>();
+        java.util.ArrayList<String> listaTemporalNombres = new java.util.ArrayList<>();
+        
+        for (int i = 0; i < sistema.getPacientes().size(); i++) {
+            vitaltrack.modelo.Paciente p = sistema.getPacientes().get(i);
+            
+            if (p.getHistorial() != null && p.getHistorial().getAlertasPendientes() != null) {
+                for (int j = 0; j < p.getHistorial().getAlertasPendientes().size(); j++) {
+                    vitaltrack.modelo.AlertaClinica a = p.getHistorial().getAlertasPendientes().get(j);
+                    
+                    listaTemporalAlertas.add(a);
+                    listaTemporalNombres.add(p.getNombreCompleto());
+                }
             }
         }
-    }
-    
-    //Mostramos desde la ultima hacia atrás
-    int count = 0;
-    for (int k = listaTemporalAlertas.size() - 1; k >= 0; k--) {
-        if (count >= 20) {
-            break;
+        
+        int count = 0;
+        for (int k = listaTemporalAlertas.size() - 1; k >= 0; k--) {
+            if (count >= 20) {
+                break;
+            }
+            
+            vitaltrack.modelo.AlertaClinica a = listaTemporalAlertas.get(k);
+            String nombrePaciente = listaTemporalNombres.get(k);
+            
+            Object[] fila = new Object[4];
+            fila[0] = a.getNivelTexto();
+            fila[1] = a.getTipoAlerta();
+            fila[2] = nombrePaciente;
+            fila[3] = a.getDescripcion();
+            
+            modeloTablaAlertas.addRow(fila);
+            count++;
         }
-        
-        AlertaClinica a = listaTemporalAlertas.get(k);
-        String nombrePaciente = listaTemporalNombres.get(k);
-        
-        Object[] fila = new Object[4];
-        fila[0] = a.getNivelTexto();
-        fila[1] = a.getTipoAlerta();
-        fila[2] = nombrePaciente;
-        fila[3] = a.getDescripcion();
-        
-        modeloTablaAlertas.addRow(fila);
-        count++;
     }
-}
-    
+        
     private String obtenerIdPacienteFila(int fila) {
         if (fila < 0 || fila >= sistema.getPacientes().size()) {
             return "";
         }
         return sistema.getPacientes().get(fila).getId();
+    }
+    
+    private void configurarEventosManuales() {
+        tablaPacientes.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent e) {
+                if (e.getClickCount() == 2) {
+                    int fila = tablaPacientes.getSelectedRow();
+                    if (fila >= 0) {
+                        String idPaciente = obtenerIdPacienteFila(fila);
+                        String nombre = sistema.getPacientes().get(fila).getNombreCompleto();
+                        String[] opciones = {"Ver historial", "Asignar diagnóstico", "Asignar monitor","Asignar médico", "Cancelar"};
+                        
+                        int opcion = javax.swing.JOptionPane.showOptionDialog(PanelDashboard.this, "¿Qué deseas hacer?", nombre,
+                            javax.swing.JOptionPane.DEFAULT_OPTION, javax.swing.JOptionPane.PLAIN_MESSAGE,
+                            null, opciones, opciones[0]
+                        );
+                        
+                        if (opcion == 0) ventana.mostrarHistorialPaciente(idPaciente);
+                        if (opcion == 1) ventana.asignarDiagnostico(idPaciente);
+                        if (opcion == 2) ventana.asignarMonitor(idPaciente);
+                        if (opcion == 3) ventana.asignarMedico(idPaciente);
+                    }
+                }
+            }
+        });
     }
 }

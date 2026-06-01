@@ -1,189 +1,307 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
+ */
 package vitaltrack.gui;
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import vitaltrack.logica.SistemaGestion;
-import vitaltrack.modelo.Paciente;
-import vitaltrack.modelo.Medico;
-import vitaltrack.monitor.MonitorSignosVitales;
+/**
+ *
+ * @author Master
+ */
+public class VentanaPrincipal extends javax.swing.JFrame {
 
-public class VentanaPrincipal extends JFrame {
+    public static final java.awt.Color COLOR_FONDO = new java.awt.Color(173, 216, 230);
+    public static final java.awt.Color COLOR_PANEL = new java.awt.Color(173, 216, 230);
+    public static final java.awt.Color COLOR_ACENTO = new java.awt.Color(6, 182, 212);
+    public static final java.awt.Color COLOR_ACENTO2 = new java.awt.Color(16, 185, 129);
+    public static final java.awt.Color COLOR_ALERTA_ROJO = new java.awt.Color(239, 68, 68);
+    public static final java.awt.Color COLOR_ALERTA_AMBA = new java.awt.Color(245, 158, 11);
+    public static final java.awt.Color COLOR_TEXTO = new java.awt.Color(248, 250, 252);
+    public static final java.awt.Color COLOR_TEXTO_SUAVE = new java.awt.Color(148, 163, 184);
+    public static final java.awt.Color COLOR_BORDE = new java.awt.Color(51, 65, 85);
     
-    public static final Color COLOR_FONDO = new Color(173, 216, 230);
-    public static final Color COLOR_PANEL = new Color(173, 216, 230);
-    public static final Color COLOR_ACENTO = new Color(6, 182, 212);
-    public static final Color COLOR_ACENTO2 = new Color(16, 185, 129);
-    public static final Color COLOR_ALERTA_ROJO = new Color(239, 68, 68);
-    public static final Color COLOR_ALERTA_AMBA = new Color(245, 158, 11);
-    public static final Color COLOR_TEXTO = new Color(248, 250, 252);
-    public static final Color COLOR_TEXTO_SUAVE = new Color(148, 163, 184);
-    public static final Color COLOR_BORDE = new Color(51, 65, 85);
-    
-    public static final Font FUENTE_TITULO = new Font("SansSerif", Font.BOLD, 22);
-    public static final Font FUENTE_SUBTIT = new Font("SansSerif", Font.BOLD, 14);
-    public static final Font FUENTE_NORMAL = new Font("SansSerif", Font.PLAIN, 13);
-    public static final Font FUENTE_PEQUEÑA = new Font("SansSerif", Font.PLAIN, 11);
-    public static final Font FUENTE_MONO = new Font("Monospaced", Font.PLAIN, 12);
-    
-    private SistemaGestion sistema;
-    private JPanel panelContenido;
-    private JLabel lblEstadoBar;
+    public static final java.awt.Font FUENTE_TITULO = new java.awt.Font("SansSerif", java.awt.Font.BOLD, 22);
+    public static final java.awt.Font FUENTE_SUBTIT = new java.awt.Font("SansSerif", java.awt.Font.BOLD, 14);
+    public static final java.awt.Font FUENTE_NORMAL = new java.awt.Font("SansSerif", java.awt.Font.PLAIN, 13);
+    public static final java.awt.Font FUENTE_PEQUEÑA = new java.awt.Font("SansSerif", java.awt.Font.PLAIN, 11);
+    public static final java.awt.Font FUENTE_MONO = new java.awt.Font("Monospaced", java.awt.Font.PLAIN, 12);
+
+    // CONTROLADORES LÓGICOS GLOBALES
+    private vitaltrack.logica.SistemaGestion sistema;
     private PanelDashboard panelDashboard;
- 
-    public VentanaPrincipal(SistemaGestion sistema) {
+
+    // CONSTRUCTOR ADAPTADO PARA INICIALIZAR EL ENTORNO NETBEANS
+    public VentanaPrincipal(vitaltrack.logica.SistemaGestion sistema) {
+        initComponents();
         this.sistema = sistema;
-        inicializarVentana();
-        construirUI();
-        mostrarDashboard();
-    }
-    
-    private void inicializarVentana() {
+        
+        // Ajustes avanzados de inicialización de la ventana física
         setTitle("VitalTrack — Sistema de Gestión de Pacientes");
-        setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.JFrame.DO_NOTHING_ON_CLOSE);
         setSize(1200, 720);
-        setMinimumSize(new Dimension(900, 600));
+        setMinimumSize(new java.awt.Dimension(900, 600));
         setLocationRelativeTo(null);
-        getContentPane().setBackground(COLOR_FONDO);
- 
-        addWindowListener(new WindowAdapter() {
+        
+        // Escucha segura de cierre para evitar pérdidas de historiales médicos
+        addWindowListener(new java.awt.event.WindowAdapter() {
             @Override
-            public void windowClosing(WindowEvent e) {
+            public void windowClosing(java.awt.event.WindowEvent e) {
                 cerrarSistema();
             }
         });
+
+        mostrarDashboard(); // Arranca mostrando la sala de control
     }
     
-    private void construirUI() {
-        setLayout(new BorderLayout());
+    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(VentanaPrincipal.class.getName());
 
-        JPanel header = crearHeader();
-        add(header, BorderLayout.NORTH);
- 
-        JPanel menuLateral = crearMenuLateral();
-        add(menuLateral, BorderLayout.WEST);
- 
-        panelContenido = new JPanel(new BorderLayout());
-        panelContenido.setBackground(COLOR_FONDO);
-        panelContenido.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
-        add(panelContenido, BorderLayout.CENTER);
- 
-        JPanel statusBar = crearStatusBar();
-        add(statusBar, BorderLayout.SOUTH);
+    /**
+     * Creates new form VentanaPrincipal
+     */
+    public VentanaPrincipal() {
+        initComponents();
     }
- 
-    private JPanel crearHeader() {
-        JPanel header = new JPanel(new BorderLayout());
-        header.setBackground(COLOR_PANEL);
-        header.setPreferredSize(new Dimension(0, 55));
- 
-        JPanel izq = new JPanel(new FlowLayout(FlowLayout.LEFT, 15, 15));
-        izq.setBackground(COLOR_PANEL);
-        JLabel lblLogo = new JLabel("VitalTrack");
-        lblLogo.setFont(FUENTE_TITULO);
-        lblLogo.setForeground(COLOR_TEXTO);
-        izq.add(lblLogo);
- 
-        JPanel der = new JPanel(new FlowLayout(FlowLayout.RIGHT, 15, 12));
-        der.setBackground(COLOR_PANEL);
-        
-        JLabel lblInfo = new JLabel("Pacientes: " + sistema.getCantidadPacientes() + " | Monitores: " + sistema.getCantidadMonitores());
-        lblInfo.setForeground(COLOR_TEXTO_SUAVE);
-        
-        JButton btnGuardar = new JButton("Guardar");
-        btnGuardar.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                guardarDatos();
+
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        jPanel1 = new javax.swing.JPanel();
+        statusBar = new javax.swing.JPanel();
+        lblEstadoBar = new javax.swing.JLabel();
+        jLabel1 = new javax.swing.JLabel();
+        header = new javax.swing.JPanel();
+        lblLogo = new javax.swing.JLabel();
+        btnGuardar = new javax.swing.JButton();
+        menuLateral = new javax.swing.JPanel();
+        btnDash = new javax.swing.JButton();
+        btnPacientes = new javax.swing.JButton();
+        btnHistorial = new javax.swing.JButton();
+        btnMonitores = new javax.swing.JButton();
+        btnAlertas = new javax.swing.JButton();
+        btnNuevo = new javax.swing.JButton();
+        btnCiclo = new javax.swing.JButton();
+        panelContenido = new javax.swing.JPanel();
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 100, Short.MAX_VALUE)
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 100, Short.MAX_VALUE)
+        );
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        lblEstadoBar.setText("Sistema listo");
+
+        jLabel1.setText("VitalTrack 2026");
+
+        javax.swing.GroupLayout statusBarLayout = new javax.swing.GroupLayout(statusBar);
+        statusBar.setLayout(statusBarLayout);
+        statusBarLayout.setHorizontalGroup(
+            statusBarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(statusBarLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(lblEstadoBar)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 241, Short.MAX_VALUE)
+                .addComponent(jLabel1)
+                .addContainerGap())
+        );
+        statusBarLayout.setVerticalGroup(
+            statusBarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(statusBarLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(statusBarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(lblEstadoBar))
+                .addContainerGap(15, Short.MAX_VALUE))
+        );
+
+        getContentPane().add(statusBar, java.awt.BorderLayout.PAGE_END);
+
+        header.setForeground(new java.awt.Color(204, 255, 255));
+        header.setPreferredSize(new java.awt.Dimension(400, 55));
+
+        lblLogo.setText("VitalTrack");
+
+        btnGuardar.setText("Guardar");
+        btnGuardar.addActionListener(this::btnGuardarActionPerformed);
+
+        javax.swing.GroupLayout headerLayout = new javax.swing.GroupLayout(header);
+        header.setLayout(headerLayout);
+        headerLayout.setHorizontalGroup(
+            headerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(headerLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(lblLogo)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, headerLayout.createSequentialGroup()
+                .addContainerGap(322, Short.MAX_VALUE)
+                .addComponent(btnGuardar)
+                .addContainerGap())
+        );
+        headerLayout.setVerticalGroup(
+            headerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(headerLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(lblLogo)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnGuardar)
+                .addContainerGap())
+        );
+
+        getContentPane().add(header, java.awt.BorderLayout.PAGE_START);
+
+        menuLateral.setPreferredSize(new java.awt.Dimension(180, 245));
+        menuLateral.setLayout(new java.awt.GridLayout(7, 1));
+
+        btnDash.setText("Resumen General");
+        btnDash.addActionListener(this::btnDashActionPerformed);
+        menuLateral.add(btnDash);
+
+        btnPacientes.setText("Pacientes");
+        btnPacientes.addActionListener(this::btnPacientesActionPerformed);
+        menuLateral.add(btnPacientes);
+
+        btnHistorial.setText("Historial");
+        btnHistorial.addActionListener(this::btnHistorialActionPerformed);
+        menuLateral.add(btnHistorial);
+
+        btnMonitores.setText("Monitores");
+        btnMonitores.addActionListener(this::btnMonitoresActionPerformed);
+        menuLateral.add(btnMonitores);
+
+        btnAlertas.setText("Alertas");
+        btnAlertas.addActionListener(this::btnAlertasActionPerformed);
+        menuLateral.add(btnAlertas);
+
+        btnNuevo.setText("Nuevo Paciente");
+        btnNuevo.addActionListener(this::btnNuevoActionPerformed);
+        menuLateral.add(btnNuevo);
+
+        btnCiclo.setText("Ciclo de Monitoreo");
+        btnCiclo.addActionListener(this::btnCicloActionPerformed);
+        menuLateral.add(btnCiclo);
+
+        getContentPane().add(menuLateral, java.awt.BorderLayout.LINE_END);
+
+        panelContenido.setBorder(javax.swing.BorderFactory.createEmptyBorder(15, 15, 15, 15));
+
+        javax.swing.GroupLayout panelContenidoLayout = new javax.swing.GroupLayout(panelContenido);
+        panelContenido.setLayout(panelContenidoLayout);
+        panelContenidoLayout.setHorizontalGroup(
+            panelContenidoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 190, Short.MAX_VALUE)
+        );
+        panelContenidoLayout.setVerticalGroup(
+            panelContenidoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 193, Short.MAX_VALUE)
+        );
+
+        getContentPane().add(panelContenido, java.awt.BorderLayout.CENTER);
+
+        pack();
+    }// </editor-fold>//GEN-END:initComponents
+
+    private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
+        // TODO add your handling code here:
+        guardarDatos();
+    }//GEN-LAST:event_btnGuardarActionPerformed
+
+    private void btnDashActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDashActionPerformed
+        // TODO add your handling code here:
+        mostrarDashboard();
+    }//GEN-LAST:event_btnDashActionPerformed
+
+    private void btnPacientesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPacientesActionPerformed
+        // TODO add your handling code here:
+        mostrarPacientes();
+    }//GEN-LAST:event_btnPacientesActionPerformed
+
+    private void btnHistorialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHistorialActionPerformed
+        // TODO add your handling code here:
+        mostrarHistorial();
+    }//GEN-LAST:event_btnHistorialActionPerformed
+
+    private void btnMonitoresActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMonitoresActionPerformed
+        // TODO add your handling code here:
+        mostrarMonitores();
+    }//GEN-LAST:event_btnMonitoresActionPerformed
+
+    private void btnAlertasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAlertasActionPerformed
+        // TODO add your handling code here:
+        mostrarAlertas();
+    }//GEN-LAST:event_btnAlertasActionPerformed
+
+    private void btnNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoActionPerformed
+        // TODO add your handling code here:
+        abrirRegistroPaciente();
+    }//GEN-LAST:event_btnNuevoActionPerformed
+
+    private void btnCicloActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCicloActionPerformed
+        // TODO add your handling code here:
+        ejecutarCiclo();
+    }//GEN-LAST:event_btnCicloActionPerformed
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
             }
-        });
- 
-        der.add(lblInfo);
-        der.add(btnGuardar);
- 
-        header.add(izq, BorderLayout.WEST);
-        header.add(der, BorderLayout.EAST);
-        return header;
+        } catch (ReflectiveOperationException | javax.swing.UnsupportedLookAndFeelException ex) {
+            logger.log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        //</editor-fold>
+
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(() -> new VentanaPrincipal().setVisible(true));
     }
- 
-    private JPanel crearMenuLateral() {
-        JPanel menu = new JPanel();
-        menu.setLayout(new GridLayout(7, 1, 5, 5)); // Ajustado a 7 filas
-        menu.setBackground(COLOR_PANEL);
-        menu.setPreferredSize(new Dimension(180, 0));
- 
-        JButton btnDash = new JButton("Resumen general");
-        JButton btnPacientes = new JButton("Pacientes");
-        JButton btnHistorial = new JButton("Historial");
-        JButton btnMonitores = new JButton("Monitores");
-        JButton btnAlertas = new JButton("Alertas");
-        JButton btnNuevo = new JButton("Nuevo Paciente");
-        JButton btnCiclo = new JButton("Ciclo Monitoreo");
- 
-        btnDash.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) { mostrarDashboard(); }
-        });
-        btnPacientes.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) { mostrarPacientes(); }
-        });
-        btnHistorial.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) { mostrarHistorial(); }
-        });
-        btnMonitores.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) { mostrarMonitores(); }
-        });
-        btnAlertas.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) { mostrarAlertas(); }
-        });
-        btnNuevo.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) { abrirRegistroPaciente(); }
-        });
-        btnCiclo.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) { ejecutarCiclo(); }
-        });
- 
-        menu.add(btnDash);
-        menu.add(btnPacientes);
-        menu.add(btnHistorial);
-        menu.add(btnMonitores);
-        menu.add(btnAlertas);
-        menu.add(btnNuevo);
-        menu.add(btnCiclo);
- 
-        return menu;
-    }
- 
-    private JPanel crearStatusBar() {
-        JPanel bar = new JPanel(new BorderLayout());
-        bar.setBackground(COLOR_FONDO);
-        bar.setPreferredSize(new Dimension(0, 25));
- 
-        lblEstadoBar = new JLabel(" Sistema listo ");
-        lblEstadoBar.setFont(FUENTE_PEQUEÑA);
-        lblEstadoBar.setForeground(COLOR_ACENTO2);
-        
-        JLabel lblVersion = new JLabel("VitalTrack 2026 ");
-        lblVersion.setFont(FUENTE_PEQUEÑA);
-        lblVersion.setForeground(COLOR_TEXTO_SUAVE);
- 
-        bar.add(lblEstadoBar, BorderLayout.WEST);
-        bar.add(lblVersion, BorderLayout.EAST);
-        return bar;
-    }
- 
-    private void mostrarPanel(JPanel panel) {
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnAlertas;
+    private javax.swing.JButton btnCiclo;
+    private javax.swing.JButton btnDash;
+    private javax.swing.JButton btnGuardar;
+    private javax.swing.JButton btnHistorial;
+    private javax.swing.JButton btnMonitores;
+    private javax.swing.JButton btnNuevo;
+    private javax.swing.JButton btnPacientes;
+    private javax.swing.JPanel header;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JLabel lblEstadoBar;
+    private javax.swing.JLabel lblLogo;
+    private javax.swing.JPanel menuLateral;
+    private javax.swing.JPanel panelContenido;
+    private javax.swing.JPanel statusBar;
+    // End of variables declaration//GEN-END:variables
+    // =========================================================================
+    //         ALGORITMOS DE NAVEGACIÓN DINÁMICA Y GESTIÓN CLÍNICA MAESTRA
+    // =========================================================================
+    private void mostrarPanel(javax.swing.JPanel panel) {
         panelContenido.removeAll();
-        panelContenido.add(panel, BorderLayout.CENTER);
+        panel.setSize(panelContenido.getWidth(), panelContenido.getHeight());
+        panelContenido.add(panel, java.awt.BorderLayout.CENTER);
         panelContenido.revalidate();
         panelContenido.repaint();
     }
@@ -203,9 +321,9 @@ public class VentanaPrincipal extends JFrame {
     }
  
     private void mostrarHistorial() {
-        JPanel placeholder = new JPanel(new FlowLayout());
+        javax.swing.JPanel placeholder = new javax.swing.JPanel(new java.awt.FlowLayout());
         placeholder.setBackground(COLOR_FONDO);
-        placeholder.add(new JLabel("Seleccioná un paciente de la lista para gestionar su historial"));
+        placeholder.add(new javax.swing.JLabel("Seleccioná un paciente de la lista para gestionar su historial"));
         mostrarPanel(placeholder);
     }
  
@@ -220,7 +338,7 @@ public class VentanaPrincipal extends JFrame {
     }
  
     private void abrirRegistroPaciente() {
-        DialogoRegistro dialogo = new DialogoRegistro(this, sistema);
+        DialogoRegistro dialogo = new DialogoRegistro(sistema);
         dialogo.setVisible(true);
         if (panelDashboard != null) {
             panelDashboard.actualizar();
@@ -239,15 +357,15 @@ public class VentanaPrincipal extends JFrame {
     private void guardarDatos() {
         sistema.guardarDatos();
         setEstado("Datos clínicos serializados");
-        JOptionPane.showMessageDialog(this, "Datos guardados en la carpeta /data", "Guardado exitoso", JOptionPane.INFORMATION_MESSAGE);
+        javax.swing.JOptionPane.showMessageDialog(this, "Datos guardados en la carpeta /data", "Guardado exitoso", javax.swing.JOptionPane.INFORMATION_MESSAGE);
     }
  
     private void cerrarSistema() {
-        int opcion = JOptionPane.showConfirmDialog(this, "¿Desea guardar los datos antes de cerrar?", "Salir", JOptionPane.YES_NO_CANCEL_OPTION);
-        if (opcion == JOptionPane.YES_OPTION) {
+        int opcion = javax.swing.JOptionPane.showConfirmDialog(this, "¿Desea guardar los datos antes de cerrar?", "Salir", javax.swing.JOptionPane.YES_NO_CANCEL_OPTION);
+        if (opcion == javax.swing.JOptionPane.YES_OPTION) {
             sistema.guardarDatos();
             System.exit(0);
-        } else if (opcion == JOptionPane.NO_OPTION) {
+        } else if (opcion == javax.swing.JOptionPane.NO_OPTION) {
             System.exit(0);
         }
     }
@@ -256,15 +374,15 @@ public class VentanaPrincipal extends JFrame {
         lblEstadoBar.setText(" " + mensaje);
     }
  
-    public SistemaGestion getSistema() { 
+    public vitaltrack.logica.SistemaGestion getSistema() { 
         return sistema; 
     }
  
     public void asignarDiagnostico(String idPaciente) {
-        Paciente paciente = sistema.buscarPaciente(idPaciente);
+        vitaltrack.modelo.Paciente paciente = sistema.buscarPaciente(idPaciente);
         if (paciente == null) return;
  
-        String diagnostico = JOptionPane.showInputDialog(this, "Modificar diagnóstico:", paciente.getDiagnostico());
+        String diagnostico = javax.swing.JOptionPane.showInputDialog(this, "Modificar diagnóstico:", paciente.getDiagnostico());
         if (diagnostico != null && !diagnostico.trim().isEmpty()) {
             paciente.setDiagnostico(diagnostico.trim());
             setEstado("Diagnóstico modificado para: " + paciente.getNombreCompleto());
@@ -274,27 +392,27 @@ public class VentanaPrincipal extends JFrame {
     
     public void asignarMonitor(String idPaciente) {
         if (sistema.getMonitores().isEmpty()) {
-            JOptionPane.showMessageDialog(this, "No existen hardware o monitores en el almacén");
+            javax.swing.JOptionPane.showMessageDialog(this, "No existen hardware o monitores en el almacén");
             return;
         }
  
         String[] opciones = new String[sistema.getMonitores().size()];
         for (int i = 0; i < sistema.getMonitores().size(); i++) {
-            MonitorSignosVitales m = sistema.getMonitores().get(i);
+            vitaltrack.monitor.MonitorSignosVitales m = sistema.getMonitores().get(i);
             opciones[i] = m.getIdMonitor() + " — " + m.getTipoMonitor();
         }
  
-        String seleccion = (String) JOptionPane.showInputDialog(this, "Seleccioná un dispositivo:", "Almacén de Monitores", JOptionPane.PLAIN_MESSAGE, null, opciones, opciones[0]);
+        String seleccion = (String) javax.swing.JOptionPane.showInputDialog(this, "Seleccioná un dispositivo:", "Almacén de Monitores", javax.swing.JOptionPane.PLAIN_MESSAGE, null, opciones, opciones[0]);
         if (seleccion != null) {
             String idMonitor = seleccion.split(" — ")[0];
             boolean exito = sistema.asignarMonitor(idMonitor, idPaciente);
             setEstado(exito ? "Monitor enlazado al paciente" : "Conflicto en la asignación.");
             if (panelDashboard != null) panelDashboard.actualizar();
         }
-    }    
+    }     
      
     public void mostrarHistorialPaciente(String idPaciente) {
-        Paciente paciente = sistema.buscarPaciente(idPaciente);
+        vitaltrack.modelo.Paciente paciente = sistema.buscarPaciente(idPaciente);
         if (paciente == null) return;
         
         mostrarPanel(new PanelHistorial(paciente, sistema, this));
@@ -302,20 +420,20 @@ public class VentanaPrincipal extends JFrame {
     }
     
     public void asignarMedico(String idPaciente) {
-        Paciente paciente = sistema.buscarPaciente(idPaciente);
+        vitaltrack.modelo.Paciente paciente = sistema.buscarPaciente(idPaciente);
         if (paciente == null) return;
 
         String[] opcionesMedicos = {
             "M-01 — Dr. Stephen Strange (Medico Cirujano)",
-            "M-02 — Dra. Harleen Quinzel (Medicina Psiquiatra)",
+            "M-02 — Dra. Harleen Quinzel (Medica Psiquiatra)",
             "M-03 — Dr. Gregory House (Medico Interno)"
         };
 
-        String seleccion = (String) JOptionPane.showInputDialog(
+        String seleccion = (String) javax.swing.JOptionPane.showInputDialog(
             this,
             "Seleccioná un médico para " + paciente.getNombreCompleto() + ":",
             "Staff Médico",
-            JOptionPane.PLAIN_MESSAGE,
+            javax.swing.JOptionPane.PLAIN_MESSAGE,
             null, 
             opcionesMedicos, 
             opcionesMedicos[0]
@@ -323,16 +441,15 @@ public class VentanaPrincipal extends JFrame {
 
         if (seleccion != null) {
             String idMedico = seleccion.split(" — ")[0];
-
-            Medico medico = sistema.buscarMedico(idMedico);
+            vitaltrack.modelo.Medico medico = sistema.buscarMedico(idMedico);
 
             if (medico == null) {
                 if (idMedico.equals("M-01")) {
-                    medico = new Medico("M-01", "Stephen", "Strange", java.time.LocalDate.of(1998, 5, 20), "44112233", "MAT-8845", "Medico Cirujano");
+                    medico = new vitaltrack.modelo.Medico("M-01", "Stephen", "Strange", java.time.LocalDate.of(1998, 5, 20), "44112233", "MAT-8845", "Medico Cirujano");
                 } else if (idMedico.equals("M-02")) {
-                    medico = new Medico("M-02", "Harleen", "Quinzel", java.time.LocalDate.of(1995, 8, 12), "38445566", "MAT-3312", "Medica Psiquiatra");
+                    medico = new vitaltrack.modelo.Medico("M-02", "Harleen", "Quinzel", java.time.LocalDate.of(1995, 8, 12), "38445566", "MAT-3312", "Medica Psiquiatra");
                 } else {
-                    medico = new Medico("M-03", "Gregory", "House", java.time.LocalDate.of(1990, 3, 15), "31223344", "MAT-4412", "Medico Interno");
+                    medico = new vitaltrack.modelo.Medico("M-03", "Gregory", "House", java.time.LocalDate.of(1990, 3, 15), "31223344", "MAT-4412", "Medico Interno");
                 }
                 sistema.agregarMedico(medico);
             }
@@ -345,4 +462,6 @@ public class VentanaPrincipal extends JFrame {
             }
         }
     }
+
+    
 }
