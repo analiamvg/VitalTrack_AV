@@ -52,7 +52,7 @@ Organicé el código en paquetes dentro de NetBeans para que sea fácil de mante
 * VitalTrack.java: Es el archivo principal (Main) que arranca todo el programa.
 
 ## 6. Tecnologías utilizadas
-* **Java 17:** Lenguaje base del proyecto.
+* **Java 21:** Lenguaje base del proyecto.
 * **Swing:** Para el diseño de las ventanas y los botones.
 * **Archivos (.dat):** Con serialización de objetos para guardar los datos de pacientes/médicos sin perderlos al cerrar el programa, y archivos de texto para el historial de alertas (log).
 * **NetBeans y Maven:** IDE y gestor del proyecto.
