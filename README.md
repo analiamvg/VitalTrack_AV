@@ -1,6 +1,6 @@
 # VitalTrack — Sistema de Gestión de Pacientes con Monitoreo de Signos Vitales
 Proyecto Final — Programación Orientada a Objetos (2026)
-*Facultad de Ingeniería — UNA*
+Facultad de Ingeniería — UNA
 
 ## 1. Descripción del problema
 En los hospitales y clínicas, controlar a los pacientes todo el tiempo es de vital importancia para detectar rapidamente si alguno se pone grave. El problema es que cuando hay muchos pacientes y distintos tipos de monitores, anotar los signos vitales a mano toma mucho tiempo y es fácil equivocarse.
@@ -41,13 +41,13 @@ Así se ve la aplicación en ejecución:
 
 ## 5. Estructura del Código fuente
 Organicé el código en paquetes dentro de NetBeans para que sea fácil de mantener:
-* `vitaltrack.modelo`: Clases de los objetos del sistema (`Persona`, `Paciente`, `Medico`, `Medicion`, etc.).
-* `vitaltrack.monitor`: La interfaz de alertas y los distintos tipos de monitores médicos.
-* `vitaltrack.logica`: Las reglas, los umbrales de salud, detección de enfermedades y el sistema principal.
-* `vitaltrack.persistencia`: Clases para guardar y leer los datos en archivos.
-* `vitaltrack.gui`: Todas las pantallas y paneles hechos con Swing.
-* `vitaltrack.utilidades`: Libreria para formatear fechas, validar datos y generar IDs.
-* `VitalTrack.java`: Es el archivo principal (Main) que arranca todo el programa.
+* vitaltrack.modelo: Clases de los objetos del sistema (`Persona`, `Paciente`, `Medico`, `Medicion`, etc.).
+* vitaltrack.monitor: La interfaz de alertas y los distintos tipos de monitores médicos.
+* vitaltrack.logica: Las reglas, los umbrales de salud, detección de enfermedades y el sistema principal.
+* vitaltrack.persistencia: Clases para guardar y leer los datos en archivos.
+* vitaltrack.gui: Todas las pantallas y paneles hechos con Swing.
+* vitaltrack.utilidades: Libreria para formatear fechas, validar datos y generar IDs.
+* VitalTrack.java: Es el archivo principal (Main) que arranca todo el programa.
 
 ## 6. Tecnologías utilizadas
 * **Java 17:** Lenguaje base del proyecto.
