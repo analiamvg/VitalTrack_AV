@@ -23,7 +23,7 @@ Aquí abajo está el diagrama de clases que armé para diseñar el sistema:
 
 ![Diagrama de Clases UML](UML_5525799_AnaliaVera.svg)
 
-## 4. Capturas de la Interfaz Gráfica (Swing)
+## 4. Capturas de la Interfaz Gráfica
 Así se ve la aplicación en ejecución:
 
 * **Pantalla Principal (Dashboard):**
